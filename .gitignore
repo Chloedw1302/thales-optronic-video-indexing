@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.env
+
+# Données volumineuses
+data/videos/
+data/audio/
+data/frames/
+
+# Sorties intermédiaires (gardez seulement manifest.csv si vous voulez)
+data/metadata/*.json
+data/metadata/*.parquet
+
+# Jupyter
+.ipynb_checkpoints/
