@@ -1,0 +1,30 @@
+{
+  "total_videos": 1,
+  "videos": [
+    {
+      "video": "video_1.mkv",
+      "entities_detected": [
+        "AAB960A",
+        "TRAILER",
+        "TURRET",
+        "WEAPON",
+        "artillery vehicle",
+        "civilian",
+        "military personnel",
+        "military truck"
+      ],
+      "entity_count": 8
+    }
+  ],
+  "all_entities": [
+    "AAB960A",
+    "TRAILER",
+    "TURRET",
+    "WEAPON",
+    "artillery vehicle",
+    "civilian",
+    "military personnel",
+    "military truck"
+  ],
+  "unique_entity_count": 8
+}

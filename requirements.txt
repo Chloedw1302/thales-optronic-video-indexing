@@ -1,6 +1,12 @@
-numpy
-pandas
-tqdm
-moviepy        # infos vidéo + extraction rapide
-ffmpeg-python  # optionnel si vous préférez piloter ffmpeg
-opencv-python  # optionnel si vous extrayez des frames avec cv2
+transformers>=4.51.1
+torch>=2.0.0
+torchvision>=0.15.0
+accelerate>=1.10.0
+opencv-python>=4.8.0
+ffmpeg-python>=0.2.0
+pandas>=2.0.0
+pillow>=11.0.0
+numpy>=1.24.0
+mistralai>=1.0.0
+python-dotenv>=1.0.0
+
