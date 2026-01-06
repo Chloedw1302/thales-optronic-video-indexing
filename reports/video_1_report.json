@@ -1,12 +1,12 @@
 {
   "video": "video_1.mkv",
-  "video_path": "video_1.mkv",
+  "video_path": "data/video_1.mkv",
   "entities": {
     "AAB960A": {
       "statistics": {
         "total_frames_analyzed": 22,
-        "frames_with_entity": 8,
-        "presence_percentage": 36.36
+        "frames_with_entity": 7,
+        "presence_percentage": 31.82
       },
       "time_ranges": [
         {
@@ -25,10 +25,10 @@
         },
         {
           "start": "00:30",
-          "end": "00:40",
+          "end": "00:35",
           "start_second": 30,
-          "end_second": 40,
-          "duration_seconds": 11
+          "end_second": 35,
+          "duration_seconds": 6
         },
         {
           "start": "01:20",
@@ -82,7 +82,7 @@
         {
           "timestamp": "00:40",
           "second": 40,
-          "present": true
+          "present": false
         },
         {
           "timestamp": "00:45",
@@ -599,18 +599,18 @@
       },
       "time_ranges": [
         {
+          "start": "00:20",
+          "end": "00:20",
+          "start_second": 20,
+          "end_second": 20,
+          "duration_seconds": 1
+        },
+        {
           "start": "00:50",
           "end": "00:55",
           "start_second": 50,
           "end_second": 55,
           "duration_seconds": 6
-        },
-        {
-          "start": "01:30",
-          "end": "01:30",
-          "start_second": 90,
-          "end_second": 90,
-          "duration_seconds": 1
         }
       ],
       "detections": [
@@ -637,7 +637,7 @@
         {
           "timestamp": "00:20",
           "second": 20,
-          "present": false
+          "present": true
         },
         {
           "timestamp": "00:25",
@@ -707,7 +707,7 @@
         {
           "timestamp": "01:30",
           "second": 90,
-          "present": true
+          "present": false
         },
         {
           "timestamp": "01:35",
