@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Search, X } from 'lucide-react';
 import { searchApi } from '../../api/search';
 import type { EntityAutocompleteItem } from '../../api/search';
+import { MIN_AUTOCOMPLETE_QUERY_LENGTH, MIN_SEMANTIC_AUTOCOMPLETE_LENGTH } from '../../utils/constants';
 
 interface EntitySearchBarProps {
   selectedEntities: string[];
@@ -26,25 +27,55 @@ export const EntitySearchBar: React.FC<EntitySearchBarProps> = ({
   // Fetch autocomplete suggestions
   useEffect(() => {
     const fetchSuggestions = async () => {
-      if (inputValue.trim().length < 1) {
+      const trimmedQuery = inputValue.trim();
+      
+      console.log(`Autocomplete useEffect triggered. Input: "${inputValue}", trimmed: "${trimmedQuery}", length: ${trimmedQuery.length}`);
+      
+      // Don't show suggestions for very short queries
+      if (trimmedQuery.length < MIN_AUTOCOMPLETE_QUERY_LENGTH) {
+        console.log(`Query too short (${trimmedQuery.length} < ${MIN_AUTOCOMPLETE_QUERY_LENGTH}), clearing suggestions`);
         setSuggestions([]);
         return;
       }
 
       try {
+        // For semantic autocomplete, require minimum length and use higher threshold for short queries
+        const canUseSemantic = useSemantic && trimmedQuery.length >= MIN_SEMANTIC_AUTOCOMPLETE_LENGTH;
+        
+        // For semantic autocomplete, use higher threshold for short queries
+        const similarityThreshold = canUseSemantic ? 
+          (trimmedQuery.length <= 3 ? 0.8 : trimmedQuery.length <= 5 ? 0.7 : 0.6) : 0.6;
+        
+        console.log(`Fetching autocomplete for "${trimmedQuery}" (semantic: ${canUseSemantic}, threshold: ${similarityThreshold})`);
+        
         const results = await searchApi.autocompleteEntities(
-          inputValue.trim(),
+          trimmedQuery,
           10,
-          useSemantic,
-          0.6
+          canUseSemantic,
+          similarityThreshold
         );
+        
+        console.log(`Received ${results.length} autocomplete results:`, results);
+        
         // Filter out already selected entities
         const filtered = results.filter(
           (item) => !selectedEntities.includes(item.name)
         );
+        
+        console.log(`Filtered to ${filtered.length} suggestions after removing selected entities`);
         setSuggestions(filtered);
+        console.log(`Suggestions state updated. showSuggestions: ${showSuggestions}, suggestions.length: ${filtered.length}`);
       } catch (error) {
         console.error('Error fetching autocomplete:', error);
+        if (error.response) {
+          console.error('Response data:', error.response.data);
+          console.error('Response status:', error.response.status);
+          console.error('Response headers:', error.response.headers);
+        } else if (error.request) {
+          console.error('No response received:', error.request);
+        } else {
+          console.error('Error setting up request:', error.message);
+        }
         setSuggestions([]);
       }
     };
@@ -104,6 +135,8 @@ export const EntitySearchBar: React.FC<EntitySearchBarProps> = ({
     }
   };
 
+  console.log(`EntitySearchBar render: inputValue="${inputValue}", showSuggestions=${showSuggestions}, suggestions.length=${suggestions.length}`);
+
   return (
     <div className="w-full">
       <div className="relative">
@@ -153,8 +186,11 @@ export const EntitySearchBar: React.FC<EntitySearchBarProps> = ({
         {showSuggestions && suggestions.length > 0 && (
           <div
             ref={suggestionsRef}
-            className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto"
+            className="absolute z-50 w-full mt-1 bg-white border-2 border-blue-500 rounded-lg shadow-lg max-h-60 overflow-auto"
           >
+            <div className="px-4 py-2 text-xs text-gray-500 bg-blue-50 border-b border-blue-200">
+              {useSemantic ? 'Semantic suggestions' : 'Entity suggestions'} ({suggestions.length} results)
+            </div>
             {suggestions.map((suggestion, index) => (
               <button
                 key={suggestion.id}
@@ -171,6 +207,31 @@ export const EntitySearchBar: React.FC<EntitySearchBarProps> = ({
                 )}
               </button>
             ))}
+          </div>
+        )}
+        
+        {/* Show hint when no suggestions but query is long enough */}
+        {showSuggestions && suggestions.length === 0 && inputValue.trim().length >= MIN_AUTOCOMPLETE_QUERY_LENGTH && (
+          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4">
+            <p className="text-sm text-gray-600">
+              {useSemantic ? 
+                'No semantic suggestions found. Try different keywords or use prefix matching.' : 
+                'No entity suggestions found. Try different keywords.'
+              }
+            </p>
+            {useSemantic && inputValue.trim().length >= MIN_SEMANTIC_AUTOCOMPLETE_LENGTH && (
+              <button
+                onClick={() => {
+                  // Switch to prefix matching if semantic search fails
+                  onEntitiesChange([inputValue.trim()]);
+                  setInputValue('');
+                  setShowSuggestions(false);
+                }}
+                className="mt-3 px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded border border-blue-200"
+              >
+                Search anyway
+              </button>
+            )}
           </div>
         )}
       </div>

@@ -300,7 +300,25 @@ class SearchService:
         Returns:
             List of entity suggestions with video counts
         """
+        # Clean the query
+        query = query.strip()
+        
+        # For semantic search, require minimum query length to avoid meaningless results
         if use_semantic:
+            min_query_length_for_semantic = 3
+            if len(query) < min_query_length_for_semantic:
+                logger.info(f"Query too short for semantic autocomplete ({len(query)} chars < {min_query_length_for_semantic}): '{query}'")
+                # Fall through to prefix matching for short queries
+            else:
+                # Adjust similarity threshold based on query length
+                # Shorter queries need higher similarity to avoid false positives
+                adjusted_threshold = min(similarity_threshold, 0.7)  # Cap at 0.7 for short queries
+                if len(query) <= 4:
+                    adjusted_threshold = max(adjusted_threshold, 0.75)  # Very strict for very short queries
+                elif len(query) <= 6:
+                    adjusted_threshold = max(adjusted_threshold, 0.7)   # Still strict for short queries
+                
+                logger.info(f"Using semantic autocomplete with adjusted threshold {adjusted_threshold} for query: '{query}'")
             try:
                 # Generate embedding for query
                 query_embedding = EmbeddingService.generate_embedding(query)
@@ -332,7 +350,7 @@ class SearchService:
                             entity_embedding
                         )
 
-                        if similarity >= similarity_threshold:
+                        if similarity >= adjusted_threshold:
                             entity_scores.append((entity, similarity))
 
                     except Exception as e:
@@ -344,6 +362,8 @@ class SearchService:
 
                 # Take top results
                 top_entities = entity_scores[:limit]
+
+                logger.info(f"Semantic autocomplete found {len(top_entities)} suggestions for query '{query}' with threshold {adjusted_threshold}")
 
                 return [
                     EntityAutocompleteItem(
@@ -359,6 +379,12 @@ class SearchService:
                 # Fall through to prefix matching on error
 
         # Default prefix matching behavior
+        # For very short queries, always use prefix matching regardless of use_semantic flag
+        if len(query) < 2:
+            logger.info(f"Query too short for any autocomplete ({len(query)} chars): '{query}'")
+            return []
+
+        logger.info(f"Using prefix-based autocomplete for query: '{query}'")
         entities = db.query(
             Entity.id,
             Entity.name,

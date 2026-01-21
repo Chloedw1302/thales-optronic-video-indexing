@@ -275,13 +275,18 @@ def autocomplete_entities(
     - Prefix match: ?q=air → Returns ["aircraft", "artillery vehicle"]
     - Semantic: ?q=air&use_semantic=true → Returns ["aircraft", "helicopter", "drone"]
     """
-    return SearchService.autocomplete_entities(
+    logger.info(f"Autocomplete request: q='{q}', limit={limit}, use_semantic={use_semantic}, similarity_threshold={similarity_threshold}")
+    
+    results = SearchService.autocomplete_entities(
         db=db,
         query=q,
         limit=limit,
         use_semantic=use_semantic,
         similarity_threshold=similarity_threshold
     )
+    
+    logger.info(f"Autocomplete response: {len(results)} suggestions")
+    return results
 
 
 @router.get("/entities/list", response_model=EntityListResponse)

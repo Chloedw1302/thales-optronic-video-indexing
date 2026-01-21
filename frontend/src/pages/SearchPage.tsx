@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Search as SearchIcon, AlertCircle, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { Search as SearchIcon, AlertCircle, Loader2, ChevronLeft, ChevronRight, Lightbulb } from 'lucide-react';
 import { EntityFilterPanel } from '../components/search/EntityFilterPanel';
 import { SearchResultCard } from '../components/search/SearchResultCard';
 import { searchApi } from '../api/search';
 import type { SearchFilters } from '../components/search/EntityFilterPanel';
-import type { UnifiedSearchResponse, EntitySearchResponse } from '../api/search';
-import { MIN_SEARCH_QUERY_LENGTH } from '../utils/constants';
+import type { UnifiedSearchResponse, EntityAutocompleteItem } from '../api/search';
+import { MIN_SEARCH_QUERY_LENGTH, MIN_AUTOCOMPLETE_QUERY_LENGTH } from '../utils/constants';
 
 const DEFAULT_FILTERS: SearchFilters = {
   operator: 'OR',
@@ -22,6 +22,60 @@ export const SearchPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasSearched, setHasSearched] = useState(false);
+  
+  // Autocomplete state
+  const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<EntityAutocompleteItem[]>([]);
+  const [showAutocomplete, setShowAutocomplete] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<HTMLDivElement>(null);
+
+  // Fetch autocomplete suggestions
+  useEffect(() => {
+    const fetchAutocomplete = async () => {
+      const trimmedQuery = query.trim();
+      
+      // Don't show autocomplete for very short queries
+      if (trimmedQuery.length < MIN_AUTOCOMPLETE_QUERY_LENGTH) {
+        setAutocompleteSuggestions([]);
+        return;
+      }
+
+      try {
+        // Fetch autocomplete suggestions
+        const results = await searchApi.autocompleteEntities(
+          trimmedQuery,
+          10,
+          false,
+          0.6
+        );
+        
+        setAutocompleteSuggestions(results);
+      } catch (error) {
+        console.error('Error fetching autocomplete:', error);
+        setAutocompleteSuggestions([]);
+      }
+    };
+
+    const timer = setTimeout(fetchAutocomplete, 300); // Debounce
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Handle click outside autocomplete
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        autocompleteRef.current &&
+        !autocompleteRef.current.contains(event.target as Node) &&
+        !inputRef.current?.contains(event.target as Node)
+      ) {
+        setShowAutocomplete(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const performSearch = useCallback(async (page: number = 1) => {
     // Check if we have valid search criteria
@@ -29,6 +83,13 @@ export const SearchPage: React.FC = () => {
     const hasValidCriteria = trimmedQuery.length > 0;
 
     if (!hasValidCriteria) {
+      setSearchResults(null);
+      setHasSearched(false);
+      return;
+    }
+
+    // Don't search for very short queries - let autocomplete handle it
+    if (trimmedQuery.length < MIN_AUTOCOMPLETE_QUERY_LENGTH) {
       setSearchResults(null);
       setHasSearched(false);
       return;
@@ -61,6 +122,15 @@ export const SearchPage: React.FC = () => {
             exact_match_results: results.total,
             semantic_match_results: 0,
             matched_entities: [],
+            search_params: {
+              query: trimmedQuery,
+              similarity_threshold: 0.7,
+              top_k: 10,
+              min_presence: filters.minPresence > 0 ? filters.minPresence : undefined,
+              min_frames: filters.minFrames > 0 ? filters.minFrames : undefined,
+              sort_by: 'created_at',
+              order: 'desc',
+            },
           });
         } else {
           // No autocomplete results found
@@ -128,6 +198,33 @@ export const SearchPage: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSelectSuggestion = (suggestion: EntityAutocompleteItem) => {
+    setQuery(suggestion.name);
+    setShowAutocomplete(false);
+    setSelectedSuggestionIndex(-1);
+    inputRef.current?.focus();
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showAutocomplete || autocompleteSuggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedSuggestionIndex((prev) => 
+        Math.min(prev + 1, autocompleteSuggestions.length - 1)
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedSuggestionIndex((prev) => Math.max(prev - 1, -1));
+    } else if (e.key === 'Enter' && selectedSuggestionIndex >= 0) {
+      e.preventDefault();
+      handleSelectSuggestion(autocompleteSuggestions[selectedSuggestionIndex]);
+    } else if (e.key === 'Escape') {
+      setShowAutocomplete(false);
+      setSelectedSuggestionIndex(-1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -146,20 +243,61 @@ export const SearchPage: React.FC = () => {
         {/* Unified search input */}
         <div className="mb-6">
           <div className="relative">
-            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-blue-500" />
-            </div>
+            {/* <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <SearchIcon className="h-5 w-5 text-gray-400" />
+            </div> */}
             <input
+              ref={inputRef}
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setShowAutocomplete(true);
+                setSelectedSuggestionIndex(-1);
+              }}
+              onFocus={() => setShowAutocomplete(true)}
+              onKeyDown={handleInputKeyDown}
               placeholder="e.g., aircraft, tanks in the sky, military personnel with drones..."
               className="block w-full pl-12 pr-4 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
+
+            {/* Autocomplete suggestions dropdown */}
+            {showAutocomplete && autocompleteSuggestions.length > 0 && (
+              <div
+                ref={autocompleteRef}
+                className="absolute z-50 w-full mt-1 bg-white border-2 border-blue-400 rounded-lg shadow-lg max-h-80 overflow-auto"
+              >
+                <div className="px-4 py-2 text-xs font-medium text-gray-600 bg-blue-50 border-b border-blue-200 flex items-center gap-2">
+                  <Lightbulb className="h-4 w-4 text-blue-500" />
+                  Autocomplete suggestions ({autocompleteSuggestions.length} found)
+                </div>
+                <div className="py-1">
+                  {autocompleteSuggestions.map((suggestion, index) => (
+                    <button
+                      key={suggestion.id}
+                      onClick={() => handleSelectSuggestion(suggestion)}
+                      className={`w-full px-4 py-2.5 text-left hover:bg-blue-50 flex items-center justify-between border-b border-gray-100 last:border-b-0 transition-colors ${
+                        index === selectedSuggestionIndex ? 'bg-blue-100' : ''
+                      }`}
+                    >
+                      <span className="font-medium text-gray-900">{suggestion.name}</span>
+                      {suggestion.video_count !== undefined && (
+                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">
+                          {suggestion.video_count} video{suggestion.video_count !== 1 ? 's' : ''}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <p className="mt-2 text-sm text-gray-500">
-            Enter entity names (comma-separated) or natural language queries. Short queries will search for exact entity matches,
-            while longer queries will use AI-powered semantic search for enhanced results.
+            Enter entity names (comma-separated) or natural language queries. 
+            {query.trim().length > 0 && query.trim().length < MIN_SEARCH_QUERY_LENGTH ? 
+              ' Type more characters to see autocomplete suggestions or press Enter to search.' : 
+              ' Short queries will search for exact entity matches, while longer queries will use AI-powered semantic search for enhanced results.'
+            }
           </p>
         </div>
 

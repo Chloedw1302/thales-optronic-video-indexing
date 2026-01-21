@@ -21,3 +21,5 @@ export const DEFAULT_INTERVAL_SECONDS = 5;
 
 // Search constants
 export const MIN_SEARCH_QUERY_LENGTH = 5;
+export const MIN_AUTOCOMPLETE_QUERY_LENGTH = 2;
+export const MIN_SEMANTIC_AUTOCOMPLETE_LENGTH = 3;
