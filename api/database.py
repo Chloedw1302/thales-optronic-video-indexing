@@ -33,10 +33,18 @@ def get_db():
         db.close()
 
 
+def get_db_url():
+    """
+    Get database URL from settings.
+    """
+    return settings.database_url
+
+
 def init_db():
     """
     Initialize database tables.
     Creates all tables defined in models.
     """
     from api.models import video  # Import models to register them
+    from api.models import entity  # Import entity models
     Base.metadata.create_all(bind=engine)

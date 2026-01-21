@@ -1,60 +1,105 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@400;500;600;700&display=swap');
 
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Amazon Ember', 'Helvetica Neue', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #111111;
+  background-color: #FFFFFF;
 }
 
-.dark {
-  background-color: #0A0E1A;
-  color: #F8FAFC;
+/* Clean, professional typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: #111111;
+  line-height: 1.2;
 }
 
-/* Smooth transitions for interactive elements */
+/* Subtle transitions for interactive elements */
 button, a, [role="button"] {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
-/* Custom scrollbar for dark theme */
+/* Clean scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0E1A;
+  background: #F7F7F7;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E293B;
-  border-radius: 4px;
+  background: #CCCCCC;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2D3B4E;
+  background: #999999;
 }
 
-/* Gradient text utility */
-.gradient-text {
-  background: linear-gradient(135deg, #FF7F50 0%, #F097D7 50%, #B7E2ED 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Professional link styling */
+a {
+  color: #007185;
+  text-decoration: none;
 }
 
-/* Card hover effect */
+a:hover {
+  color: #008397;
+  text-decoration: underline;
+}
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid #007185;
+  outline-offset: 2px;
+}
+
+/* Clean card styling */
 .card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: box-shadow 0.15s ease;
 }
 
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px 0 rgba(255, 127, 80, 0.1);
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* Status indicators */
+.status-completed {
+  background-color: #E6F3E6;
+  color: #00A651;
+  border: 1px solid #A8D5A8;
+}
+
+.status-processing {
+  background-color: #FFF8E1;
+  color: #FF9900;
+  border: 1px solid #FFE0B2;
+}
+
+.status-error {
+  background-color: #FDEDE8;
+  color: #C45500;
+  border: 1px solid #F9D4C5;
+}
+
+/* Clean form elements */
+input, select, textarea {
+  border: 1px solid #DDDDDD;
+  border-radius: 0.25rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #007185;
+  box-shadow: 0 0 0 2px rgba(0, 113, 133, 0.2);
+  outline: none;
 }

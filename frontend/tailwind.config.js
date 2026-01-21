@@ -9,45 +9,50 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#FF7F50', // Coral/Orange accent
-          hover: '#FF9549',
+          DEFAULT: '#007185', // Amazon blue - professional and trustworthy
+          hover: '#008397',
           foreground: '#FFFFFF',
         },
         secondary: {
-          DEFAULT: '#1E293B',
-          foreground: '#FFFFFF',
+          DEFAULT: '#F0F2F2', // Light gray for backgrounds
+          foreground: '#111111',
         },
         background: {
-          DEFAULT: '#0A0E1A', // Deep dark background
-          subtle: '#10161F', // Slightly lighter background
-          card: '#141B28', // Card background
+          DEFAULT: '#FFFFFF', // Clean white background
+          subtle: '#F7F7F7', // Very light gray for subtle backgrounds
+          card: '#FFFFFF', // White cards
         },
         foreground: {
-          DEFAULT: '#F8FAFC',
-          muted: '#94A3B8',
+          DEFAULT: '#111111', // Dark gray text
+          muted: '#555555', // Medium gray for secondary text
         },
         muted: {
-          DEFAULT: '#1E293B',
-          foreground: '#94A3B8',
+          DEFAULT: '#E7E9EC', // Light gray for muted elements
+          foreground: '#555555',
         },
         accent: {
-          DEFAULT: '#1E293B',
-          hover: '#2D3B4E',
-          foreground: '#F8FAFC',
-          pink: '#F097D7',
-          yellow: '#D0D94C',
-          blue: '#B7E2ED',
-          green: '#4ADE80',
+          DEFAULT: '#E7E9EC', // Light gray for accents
+          hover: '#DADBDB',
+          foreground: '#111111',
+          orange: '#FF9900', // Amazon orange for highlights
+          yellow: '#FFD814', // Amazon yellow for warnings
+          blue: '#007185', // Amazon blue
+          green: '#00A651', // Amazon green for success
+          red: '#C45500', // Amazon red for errors
+        },
+        destructive: {
+          DEFAULT: '#D12F19', // More visible red for destructive actions
+          hover: '#B82612',
         },
         border: {
-          DEFAULT: '#1E293B',
-          subtle: '#1A2234',
+          DEFAULT: '#DDDDDD', // Light gray borders
+          subtle: '#E7E9EC',
         },
-        input: '#1E293B',
-        ring: '#FF7F50',
+        input: '#FFFFFF',
+        ring: '#007185',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['Amazon Ember', 'Helvetica Neue', 'Arial', 'sans-serif'],
         mono: ['Monaco', 'Courier New', 'monospace'],
       },
       fontSize: {
@@ -62,17 +67,14 @@ export default {
         '5xl': ['3rem', { lineHeight: '1.16' }],
       },
       borderRadius: {
-        lg: '0.75rem',
-        md: '0.5rem',
-        sm: '0.375rem',
+        lg: '0.25rem', // More squared corners - Amazon style
+        md: '0.25rem',
+        sm: '0.125rem',
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(255, 127, 80, 0.15)',
-        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.3)',
-        'card-hover': '0 4px 12px 0 rgba(255, 127, 80, 0.1)',
-      },
-      backdropBlur: {
-        xs: '2px',
+        'card': '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+        'button': '0 1px 2px 0 rgba(0, 0, 0, 0.1)',
       },
     },
   },

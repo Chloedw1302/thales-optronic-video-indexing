@@ -57,7 +57,7 @@ export function VideoDetailPage() {
 
       {/* Processing Progress (only show while processing) */}
       {isProcessing && videoId && (
-        <Card className="hover:scale-[1.01] transition-transform">
+        <Card className="card-hover">
           <CardHeader>
             <CardTitle>Processing Progress</CardTitle>
           </CardHeader>
@@ -70,7 +70,7 @@ export function VideoDetailPage() {
       {/* Report and Frames (only show when completed) */}
       {isCompleted && videoId && (
         <>
-          <Card className="hover:scale-[1.01] transition-transform">
+          <Card className="card-hover">
             <CardHeader>
               <CardTitle>Analysis Report</CardTitle>
             </CardHeader>
@@ -80,7 +80,7 @@ export function VideoDetailPage() {
           </Card>
 
           {video.total_frames_analyzed && video.total_frames_analyzed > 0 && (
-            <Card className="hover:scale-[1.01] transition-transform">
+            <Card className="card-hover">
               <CardHeader>
                 <CardTitle>Frame Gallery</CardTitle>
               </CardHeader>

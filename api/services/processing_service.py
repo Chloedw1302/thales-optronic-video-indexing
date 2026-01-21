@@ -207,6 +207,27 @@ class ProcessingService:
 
             db.commit()
 
+            # Index entities for search
+            ProcessingService.update_progress(
+                db, video, "Indexing entities", 95.0,
+                "Indexing entities for search"
+            )
+
+            try:
+                from api.services.entity_indexing_service import EntityIndexingService
+                indexing_result = EntityIndexingService.index_video_entities(
+                    str(video.id),
+                    str(report_path),
+                    db
+                )
+                if indexing_result["success"]:
+                    print(f"Indexed {indexing_result['entities_indexed']} entities")
+                else:
+                    print(f"Warning: Entity indexing failed: {indexing_result.get('error', 'Unknown error')}")
+            except Exception as e:
+                print(f"Warning: Entity indexing failed: {str(e)}")
+                # Don't fail the entire processing if indexing fails
+
             # Mark as completed
             ProcessingService.update_progress(
                 db, video, "Complete", 100.0,

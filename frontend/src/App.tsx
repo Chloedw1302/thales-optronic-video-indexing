@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { VideoListPage } from './pages/VideoListPage';
 import { UploadPage } from './pages/UploadPage';
 import { VideoDetailPage } from './pages/VideoDetailPage';
+import { SearchPage } from './pages/SearchPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
@@ -27,6 +28,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/videos" element={<VideoListPage />} />
               <Route path="/upload" element={<UploadPage />} />
+              <Route path="/search" element={<SearchPage />} />
               <Route path="/videos/:videoId" element={<VideoDetailPage />} />
               <Route path="*" element={<NotFoundPage />} />
             </Routes>

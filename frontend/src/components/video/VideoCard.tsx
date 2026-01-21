@@ -13,7 +13,7 @@ interface VideoCardProps {
 
 export function VideoCard({ video, onDelete }: VideoCardProps) {
   return (
-    <Card className="hover:scale-[1.02] transition-transform">
+    <Card className="card-hover">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
@@ -54,18 +54,18 @@ export function VideoCard({ video, onDelete }: VideoCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="flex justify-end space-x-2 pt-0">
+      <CardFooter className="flex justify-end gap-2 pt-4">
         <Button
-          variant="outline"
+          variant="destructive"
           size="sm"
           onClick={() => onDelete(video.id)}
-          className="text-red-400 hover:text-red-300 border-red-500/30 hover:bg-red-500/10"
+          className="shadow-sm"
         >
           <Trash2 className="h-4 w-4 mr-1" />
           Delete
         </Button>
         <Link to={`/videos/${video.id}`}>
-          <Button size="sm" variant="gradient">
+          <Button size="sm" variant="default" className="shadow-sm">
             <Eye className="h-4 w-4 mr-1" />
             View Details
           </Button>

@@ -14,25 +14,25 @@ export function HomePage() {
   };
 
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto py-6">
       {/* Hero Section */}
-      <div className="text-center space-y-6 pt-8 pb-4">
-        <h1 className="text-6xl font-bold gradient-text">
+      <div className="space-y-6">
+        <h1 className="text-3xl font-semibold text-foreground">
           Thales Video Indexing
         </h1>
-        <p className="text-xl text-foreground-muted max-w-2xl mx-auto leading-relaxed">
+        <p className="text-base text-foreground-muted max-w-3xl leading-relaxed">
           Advanced video processing platform with AI-powered entity detection and comprehensive analytics.
         </p>
-        <div className="flex justify-center gap-4 pt-8">
+        <div className="flex flex-wrap gap-4 pt-4">
           <Link to="/upload">
-            <Button variant="default" size="lg" className="px-8 bg-primary hover:bg-primary-hover text-white font-semibold shadow-glow">
-              <Upload className="h-5 w-5 mr-2" />
+            <Button variant="default" size="default" className="px-6">
+              <Upload className="h-4 w-4 mr-2" />
               Upload Video
             </Button>
           </Link>
           <Link to="/videos">
-            <Button variant="outline" size="lg" className="px-8 border-border-subtle hover:bg-accent hover:border-primary/30 font-semibold">
-              <Video className="h-5 w-5 mr-2" />
+            <Button variant="outline" size="default" className="px-6">
+              <Video className="h-4 w-4 mr-2" />
               View Library
             </Button>
           </Link>
@@ -40,67 +40,67 @@ export function HomePage() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">Total Videos</CardTitle>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="card-hover">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-foreground-muted uppercase tracking-wider">Total Videos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-5xl font-bold text-primary">{stats.total}</div>
+            <div className="text-3xl font-bold text-primary">{stats.total}</div>
           </CardContent>
         </Card>
 
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">Processing</CardTitle>
+        <Card className="card-hover">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-foreground-muted uppercase tracking-wider">Processing</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-5xl font-bold text-accent-yellow">{stats.processing}</div>
+            <div className="text-3xl font-bold text-accent-orange">{stats.processing}</div>
           </CardContent>
         </Card>
 
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-xs font-semibold text-foreground-muted uppercase tracking-wider">Completed</CardTitle>
+        <Card className="card-hover">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xs font-medium text-foreground-muted uppercase tracking-wider">Completed</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-5xl font-bold text-accent-green">{stats.completed}</div>
+            <div className="text-3xl font-bold text-accent-green">{stats.completed}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Features Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="space-y-4">
-            <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center ring-1 ring-primary/20">
-              <Upload className="h-6 w-6 text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="card-hover">
+          <CardHeader className="space-y-3">
+            <div className="w-10 h-10 bg-primary/10 rounded-sm flex items-center justify-center border border-primary/20">
+              <Upload className="h-5 w-5 text-primary" />
             </div>
-            <CardTitle className="text-lg font-semibold">Easy Upload</CardTitle>
+            <CardTitle className="text-base font-medium">Easy Upload</CardTitle>
             <CardDescription className="text-foreground-muted leading-relaxed">
               Drag and drop your videos for quick upload. Supports MP4, MKV, AVI, and MOV formats.
             </CardDescription>
           </CardHeader>
         </Card>
 
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="space-y-4">
-            <div className="w-12 h-12 bg-accent-yellow/10 rounded-lg flex items-center justify-center ring-1 ring-accent-yellow/20">
-              <Play className="h-6 w-6 text-accent-yellow" />
+        <Card className="card-hover">
+          <CardHeader className="space-y-3">
+            <div className="w-10 h-10 bg-accent-orange/10 rounded-sm flex items-center justify-center border border-accent-orange/20">
+              <Play className="h-5 w-5 text-accent-orange" />
             </div>
-            <CardTitle className="text-lg font-semibold">Automated Processing</CardTitle>
+            <CardTitle className="text-base font-medium">Automated Processing</CardTitle>
             <CardDescription className="text-foreground-muted leading-relaxed">
               Videos are processed automatically with configurable frame extraction intervals.
             </CardDescription>
           </CardHeader>
         </Card>
 
-        <Card className="card-hover bg-background-card border-border-subtle">
-          <CardHeader className="space-y-4">
-            <div className="w-12 h-12 bg-accent-blue/10 rounded-lg flex items-center justify-center ring-1 ring-accent-blue/20">
-              <Video className="h-6 w-6 text-accent-blue" />
+        <Card className="card-hover">
+          <CardHeader className="space-y-3">
+            <div className="w-10 h-10 bg-accent-blue/10 rounded-sm flex items-center justify-center border border-accent-blue/20">
+              <Video className="h-5 w-5 text-accent-blue" />
             </div>
-            <CardTitle className="text-lg font-semibold">Entity Detection</CardTitle>
+            <CardTitle className="text-base font-medium">Entity Detection</CardTitle>
             <CardDescription className="text-foreground-muted leading-relaxed">
               Advanced AI identifies and tracks entities throughout your videos with detailed reports.
             </CardDescription>
@@ -110,10 +110,10 @@ export function HomePage() {
 
       {/* Recent Videos */}
       {data && data.videos.length > 0 && (
-        <Card className="bg-background-card border-border-subtle">
-          <CardHeader>
+        <Card className="card-hover">
+          <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xl font-semibold">Recent Videos</CardTitle>
+              <CardTitle className="text-lg font-medium">Recent Videos</CardTitle>
               <Link to="/videos">
                 <Button variant="ghost" size="sm" className="hover:bg-accent-hover text-foreground-muted hover:text-foreground">
                   View All
@@ -127,15 +127,11 @@ export function HomePage() {
                 <Link
                   key={video.id}
                   to={`/videos/${video.id}`}
-                  className="block p-4 rounded-lg border border-border-subtle hover:border-primary/30 hover:bg-accent transition-all"
+                  className="block p-3 rounded-sm border border-border hover:border-primary/30 hover:bg-accent transition-colors"
                 >
                   <div className="flex items-center justify-between gap-4">
                     <span className="font-medium truncate text-foreground">{video.original_filename}</span>
-                    <span className={`text-xs font-semibold px-3 py-1.5 rounded-full whitespace-nowrap ${
-                      video.status === 'completed' ? 'bg-accent-green/10 text-accent-green ring-1 ring-accent-green/20' :
-                      video.status === 'processing' ? 'bg-accent-yellow/10 text-accent-yellow ring-1 ring-accent-yellow/20' :
-                      'bg-muted/50 text-foreground-muted ring-1 ring-border'
-                    }`}>
+                    <span className={`text-xs font-medium px-2 py-1 rounded-sm whitespace-nowrap status-${video.status}`}>
                       {video.status}
                     </span>
                   </div>

@@ -39,6 +39,11 @@ class Settings(BaseSettings):
     min_interval_seconds: int = 1
     max_interval_seconds: int = 60
 
+    # Embedding configuration
+    embedding_model: str = "mistral-embed"
+    similarity_threshold_default: float = 0.7
+    embedding_batch_size: int = 50
+
     # CORS settings
     cors_origins: list = ["*"]
 

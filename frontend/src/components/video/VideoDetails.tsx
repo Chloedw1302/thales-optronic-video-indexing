@@ -22,7 +22,7 @@ export function VideoDetails({ video }: VideoDetailsProps) {
   };
 
   return (
-    <Card className="hover:scale-[1.01] transition-transform">
+    <Card className="card-hover">
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -97,7 +97,7 @@ export function VideoDetails({ video }: VideoDetailsProps) {
             Download Video
           </Button>
           {video.status === 'completed' && video.report_path && (
-            <Button onClick={handleDownloadReport} variant="gradient">
+            <Button onClick={handleDownloadReport} variant="default">
               <Download className="h-4 w-4 mr-2" />
               Download Report
             </Button>

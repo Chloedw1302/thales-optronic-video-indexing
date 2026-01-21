@@ -22,13 +22,13 @@ export function VideoListPage() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold">Video Library</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-2xl font-semibold text-foreground">Video Library</h1>
+          <p className="text-foreground-muted mt-1">
             Manage and view all your uploaded videos
           </p>
         </div>
         <Link to="/upload">
-          <Button variant="gradient">
+          <Button variant="default">
             <Upload className="h-4 w-4 mr-2" />
             Upload New Video
           </Button>
@@ -37,15 +37,15 @@ export function VideoListPage() {
 
       {/* Filter Tabs */}
       <div className="border-b border-border">
-        <div className="flex space-x-8">
+        <div className="flex space-x-6">
           {tabs.map((tab) => (
             <button
               key={tab.value}
               onClick={() => setActiveTab(tab.value)}
-              className={`pb-3 px-2 border-b-2 transition-colors font-medium ${
+              className={`pb-2 px-1 border-b-2 transition-colors font-medium text-sm ${
                 activeTab === tab.value
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                  : 'border-transparent text-foreground-muted hover:text-foreground'
               }`}
             >
               {tab.label}

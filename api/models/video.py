@@ -7,6 +7,7 @@ from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, Text
 from sqlalchemy.dialects.postgresql import UUID as PostgresUUID
 from sqlalchemy import TypeDecorator, CHAR
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from api.database import Base
 
@@ -92,6 +93,9 @@ class Video(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     processed_at = Column(DateTime, nullable=True)
+
+    # Relationships
+    entity_detections = relationship("VideoEntityDetection", backref="video", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Video(id={self.id}, filename={self.filename}, status={self.status})>"

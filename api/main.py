@@ -6,10 +6,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 import logging
+import asyncio
+import json
+from datetime import datetime
+from threading import Thread
 
 from api.config import settings
-from api.database import init_db
+from api.database import init_db, SessionLocal
 from api.routes import videos_router, health_router
+from api.routes.search import router as search_router
+from api.models.entity import Entity
+from api.services.embedding_service import EmbeddingService
 
 # Configure logging
 logging.basicConfig(
@@ -88,6 +95,62 @@ async def general_exception_handler(request: Request, exc: Exception):
     )
 
 
+def generate_missing_embeddings():
+    """
+    Background task to generate embeddings for entities that don't have them.
+
+    This runs on startup to ensure all existing entities have embeddings
+    for semantic search functionality.
+    """
+    db = SessionLocal()
+    try:
+        # Find entities without embeddings
+        entities = db.query(Entity).filter(Entity.embedding.is_(None)).all()
+
+        if not entities:
+            logger.info("All entities already have embeddings")
+            return
+
+        logger.info(f"Found {len(entities)} entities without embeddings")
+        logger.info("Starting background embedding generation...")
+
+        # Process in batches of 50
+        batch_size = 50
+        successful = 0
+        failed = 0
+
+        for i in range(0, len(entities), batch_size):
+            batch = entities[i:i + batch_size]
+            entity_names = [e.name for e in batch]
+
+            try:
+                logger.info(f"Processing batch {i // batch_size + 1}/{(len(entities) + batch_size - 1) // batch_size}")
+                embeddings = EmbeddingService.generate_embeddings_batch(entity_names, batch_size=batch_size)
+
+                # Update entities with their embeddings
+                for entity, embedding in zip(batch, embeddings):
+                    entity.embedding = json.dumps(embedding)
+                    entity.embedding_model = "mistral-embed"
+                    entity.embedding_generated_at = datetime.utcnow()
+
+                db.commit()
+                successful += len(batch)
+                logger.info(f"Successfully generated embeddings for batch ({successful}/{len(entities)})")
+
+            except Exception as e:
+                logger.error(f"Failed to generate embeddings for batch: {e}")
+                db.rollback()
+                failed += len(batch)
+
+        logger.info(f"Embedding generation complete: {successful} successful, {failed} failed")
+
+    except Exception as e:
+        logger.error(f"Error in background embedding generation: {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+
 # Startup event
 @app.on_event("startup")
 async def startup_event():
@@ -109,6 +172,12 @@ async def startup_event():
     settings.processed_dir.mkdir(parents=True, exist_ok=True)
     logger.info("Storage directories verified")
 
+    # Start background task to generate missing embeddings
+    # Run in a separate thread to avoid blocking startup
+    embedding_thread = Thread(target=generate_missing_embeddings, daemon=True)
+    embedding_thread.start()
+    logger.info("Background embedding generation started")
+
     logger.info("API startup complete")
 
 
@@ -122,6 +191,7 @@ async def shutdown_event():
 # Register routers
 app.include_router(health_router)
 app.include_router(videos_router)
+app.include_router(search_router)
 
 
 # Root endpoint

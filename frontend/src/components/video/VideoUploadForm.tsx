@@ -238,7 +238,7 @@ export function VideoUploadForm() {
           )}
 
           {/* Submit Button */}
-          <Button type="submit" className="w-full" variant="gradient" disabled={uploadMutation.isPending || !videoFile}>
+          <Button type="submit" className="w-full" variant="default" disabled={uploadMutation.isPending || !videoFile}>
             {uploadMutation.isPending ? 'Uploading...' : 'Upload and Process'}
           </Button>
         </form>
