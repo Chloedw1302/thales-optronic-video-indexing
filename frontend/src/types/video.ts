@@ -45,6 +45,14 @@ export interface VideoReport {
   entity_appearances: Record<string, any>;
   timeline: any[];
   statistics: Record<string, any>;
+  consolidated_timeline: Array<{
+    entity: string;
+    start: string;
+    end: string;
+    start_second: number;
+    end_second: number;
+    duration_seconds: number;
+  }>;
 }
 
 export interface VideoListResponse {

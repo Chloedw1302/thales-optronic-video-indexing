@@ -122,6 +122,7 @@ class VideoReport(BaseModel):
     entity_appearances: Dict[str, Any]
     timeline: List[Dict[str, Any]]
     statistics: Dict[str, Any]
+    consolidated_timeline: List[Dict[str, Any]] = []
 
     @field_validator('video_id', mode='before')
     @classmethod

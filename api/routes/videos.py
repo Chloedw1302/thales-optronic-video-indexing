@@ -253,6 +253,24 @@ def get_video_report(video_id: str, db: Session = Depends(get_db)):
 
         if "statistics" in report_data:
             statistics = report_data["statistics"]
+        
+        # Build consolidated timeline data for visualization
+        consolidated_timeline = []
+        if "entities" in report_data:
+            for entity_name, entity_data in report_data["entities"].items():
+                if entity_data.get("time_ranges", []):
+                    for time_range in entity_data["time_ranges"]:
+                        consolidated_timeline.append({
+                            "entity": entity_name,
+                            "start": time_range["start"],
+                            "end": time_range["end"],
+                            "start_second": time_range["start_second"],
+                            "end_second": time_range["end_second"],
+                            "duration_seconds": time_range["duration_seconds"]
+                        })
+        
+        # Sort timeline by start time
+        consolidated_timeline.sort(key=lambda x: x["start_second"])
 
         return VideoReport(
             video_id=video_id,
@@ -263,7 +281,8 @@ def get_video_report(video_id: str, db: Session = Depends(get_db)):
             unique_entities=unique_entities,
             entity_appearances=entity_appearances,
             timeline=timeline,
-            statistics=statistics
+            statistics=statistics,
+            consolidated_timeline=consolidated_timeline
         )
 
     except Exception as e:

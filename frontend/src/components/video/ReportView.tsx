@@ -4,6 +4,8 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { ErrorMessage } from '@/components/common/ErrorMessage';
 import { useVideoReport } from '@/hooks/useVideoReport';
 import { formatDuration } from '@/utils/formatters';
+import { TimelineVisualization } from './TimelineVisualization';
+import { EntityTimelineChart } from './EntityTimelineChart';
 
 interface ReportViewProps {
   videoId: string;
@@ -85,6 +87,12 @@ export function ReportView({ videoId }: ReportViewProps) {
         </CardContent>
       </Card>
 
+      {/* Entity Timeline Chart */}
+      <EntityTimelineChart report={report} />
+
+      {/* Timeline Visualization */}
+      <TimelineVisualization report={report} />
+
       {/* Entity Appearances Details */}
       {Object.keys(report.entity_appearances).length > 0 && (
         <Card>
@@ -114,6 +122,20 @@ export function ReportView({ videoId }: ReportViewProps) {
                       </div>
                     )}
                   </div>
+                  {/* Time Ranges */}
+                  {data.time_ranges && data.time_ranges.length > 0 && (
+                    <div className="mt-3">
+                      <span className="text-muted-foreground text-sm">Time Ranges:</span>
+                      <div className="mt-1 space-y-1 text-sm">
+                        {data.time_ranges.map((range: any, idx: number) => (
+                          <div key={idx} className="flex items-center">
+                            <span className="text-muted-foreground mr-2">{idx + 1}.</span>
+                            <span>{range.start} - {range.end} ({range.duration_seconds}s)</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
