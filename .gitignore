@@ -1,5 +1,31 @@
 # Python
 .venv/
 .env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Database
+thales.db
+thales.db-journal
+*.db
+*.db-journal
+
+# Storage
+storage/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
 
 
