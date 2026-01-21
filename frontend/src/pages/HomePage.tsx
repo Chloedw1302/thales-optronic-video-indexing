@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Upload, Video, Play } from 'lucide-react';
+import { Upload, Video, Search as SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useVideos } from '@/hooks/useVideos';
+import { HomeSearch } from '@/components/search/HomeSearch';
 
 export function HomePage() {
   const { data } = useVideos({ limit: 5 });
@@ -23,7 +24,13 @@ export function HomePage() {
         <p className="text-base text-foreground-muted max-w-3xl leading-relaxed">
           Advanced video processing platform with AI-powered entity detection and comprehensive analytics.
         </p>
-        <div className="flex flex-wrap gap-4 pt-4">
+        
+        {/* Search Section */}
+        <div className="w-full max-w-2xl mx-auto">
+          <HomeSearch />
+        </div>
+        
+        <div className="flex flex-wrap gap-4 pt-4 justify-center">
           <Link to="/upload">
             <Button variant="default" size="default" className="px-6">
               <Upload className="h-4 w-4 mr-2" />
@@ -34,6 +41,12 @@ export function HomePage() {
             <Button variant="outline" size="default" className="px-6">
               <Video className="h-4 w-4 mr-2" />
               View Library
+            </Button>
+          </Link>
+          <Link to="/search">
+            <Button variant="outline" size="default" className="px-6">
+              <SearchIcon className="h-4 w-4 mr-2" />
+              Advanced Search
             </Button>
           </Link>
         </div>
@@ -74,11 +87,11 @@ export function HomePage() {
         <Card className="card-hover">
           <CardHeader className="space-y-3">
             <div className="w-10 h-10 bg-primary/10 rounded-sm flex items-center justify-center border border-primary/20">
-              <Upload className="h-5 w-5 text-primary" />
+              <SearchIcon className="h-5 w-5 text-primary" />
             </div>
-            <CardTitle className="text-base font-medium">Easy Upload</CardTitle>
+            <CardTitle className="text-base font-medium">AI-Powered Search</CardTitle>
             <CardDescription className="text-foreground-muted leading-relaxed">
-              Drag and drop your videos for quick upload. Supports MP4, MKV, AVI, and MOV formats.
+              Find videos using natural language queries or entity names with semantic search capabilities.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -86,11 +99,11 @@ export function HomePage() {
         <Card className="card-hover">
           <CardHeader className="space-y-3">
             <div className="w-10 h-10 bg-accent-orange/10 rounded-sm flex items-center justify-center border border-accent-orange/20">
-              <Play className="h-5 w-5 text-accent-orange" />
+              <Upload className="h-5 w-5 text-accent-orange" />
             </div>
-            <CardTitle className="text-base font-medium">Automated Processing</CardTitle>
+            <CardTitle className="text-base font-medium">Easy Upload</CardTitle>
             <CardDescription className="text-foreground-muted leading-relaxed">
-              Videos are processed automatically with configurable frame extraction intervals.
+              Drag and drop your videos for quick upload. Supports MP4, MKV, AVI, and MOV formats.
             </CardDescription>
           </CardHeader>
         </Card>

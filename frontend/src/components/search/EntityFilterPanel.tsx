@@ -41,7 +41,7 @@ export const EntityFilterPanel: React.FC<EntityFilterPanelProps> = ({
       {isSemanticMode && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            AI Similarity: {Math.round((filters.similarityThreshold || 0.7) * 100)}%
+            Similarity: {Math.round((filters.similarityThreshold || 0.7) * 100)}%
           </label>
           <input
             type="range"

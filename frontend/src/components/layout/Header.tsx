@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Video, Menu } from 'lucide-react';
+import { Video, Menu, Search } from 'lucide-react';
 import { useState } from 'react';
 
 export function Header() {
@@ -29,6 +29,17 @@ export function Header() {
               <span className="text-lg font-semibold text-foreground">Thales Video Indexing</span>
             </Link>
           </div>
+          
+          {/* Search button for desktop */}
+          <div className="hidden lg:flex items-center">
+            <Link
+              to="/search"
+              className="p-2 rounded-sm hover:bg-accent-hover transition-colors"
+              aria-label="Search"
+            >
+              <Search className="h-5 w-5 text-foreground" />
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -42,6 +53,13 @@ export function Header() {
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
+            </Link>
+            <Link
+              to="/search"
+              className="block py-2 px-3 text-sm font-medium text-foreground hover:bg-accent-hover transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Search
             </Link>
             <Link
               to="/videos"

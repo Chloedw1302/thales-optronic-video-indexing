@@ -6,6 +6,7 @@ import { searchApi } from '../api/search';
 import type { SearchFilters } from '../components/search/EntityFilterPanel';
 import type { UnifiedSearchResponse, EntityAutocompleteItem } from '../api/search';
 import { MIN_SEARCH_QUERY_LENGTH, MIN_AUTOCOMPLETE_QUERY_LENGTH } from '../utils/constants';
+import { useLocation } from 'react-router-dom';
 
 const DEFAULT_FILTERS: SearchFilters = {
   operator: 'OR',
@@ -22,6 +23,9 @@ export const SearchPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasSearched, setHasSearched] = useState(false);
+  
+  // Handle location state for homepage navigation
+  const location = useLocation();
   
   // Autocomplete state
   const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<EntityAutocompleteItem[]>([]);
@@ -176,6 +180,15 @@ export const SearchPage: React.FC = () => {
       setIsLoading(false);
     }
   }, [query, filters]);
+
+  // Handle initial query from homepage navigation
+  useEffect(() => {
+    if (location.state?.query && location.state.fromHome) {
+      setQuery(location.state.query);
+      // Clear the state to avoid re-triggering on subsequent renders
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Auto-search when search criteria or filters change
   useEffect(() => {
@@ -403,7 +416,7 @@ export const SearchPage: React.FC = () => {
                     {searchResults.matched_entities.length > 0 && (
                       <div className="mt-4 pt-4 border-t border-blue-100">
                         <p className="text-xs text-blue-600 uppercase tracking-wide mb-2">
-                          AI Found Similar Entities:
+                          Found Similar Entities:
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {searchResults.matched_entities.map((entity) => (
